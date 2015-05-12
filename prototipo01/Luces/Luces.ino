@@ -14,6 +14,7 @@ int ringPin = 8;
 boolean reading;
 boolean flag = false;
 boolean switchStatus = false;
+int delayTime = 200;
 
 
 void setup(){
@@ -35,10 +36,12 @@ void changeStatus(int pin){
   reading = digitalRead(pin);
   if(reading){
     flag = !flag;
+    /*
     while(reading){
       reading = digitalRead(pin);
     }
-    delay(500);
+    */
+    delay(delayTime);
   }  
 }
 
@@ -47,7 +50,7 @@ void changeStatusSwitch(int pin){
   if(digitalRead(pin) != switchStatus){
     flag = !flag;
     switchStatus = digitalRead(pin);
-    delay(500);  
+    delay(delayTime);  
   }  
 }
 
