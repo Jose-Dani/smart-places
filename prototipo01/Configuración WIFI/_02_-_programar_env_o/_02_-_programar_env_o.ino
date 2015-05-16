@@ -57,16 +57,21 @@ void loop(){
     Serial.println("No '>' prompt received after AT+CPISEND");
   }
   
-  digitalWrite(LEDPIN, HIGH);
-  for (int i=0;i<149;i++)  //this should capture the 'Date: ' line from the header
+  // Agrego un filtro, para que tome la respuesta a partir de la palabra indicada. 
+  if(WSerial.find("Hola")){
+    digitalWrite(LEDPIN, HIGH);
+    for (int i=0;i<11;i++)  //this should capture the 'Date: ' line from the header    
     {
-      if (WSerial.available())  //new cahracters received?
+      if (WSerial.available())  //new cahracters received?      
       {
         char c=WSerial.read();  //print to console
         Serial.write(c);
       }
       else i--;  //if not, keep going round loop until we've got all the characters
     }
+  }
+    
+  
       digitalWrite(LEDPIN, LOW);
     delay(1000);
     WSerial.println("AT+CIPCLOSE");  
