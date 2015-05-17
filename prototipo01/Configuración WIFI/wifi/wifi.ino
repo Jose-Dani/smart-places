@@ -10,8 +10,8 @@ void setup()
 {
     pinMode(LEDPIN, OUTPUT);
  
-    Serial.begin(57600);   
-    BTSerial.begin(57600); 
+    Serial.begin(115200);   
+    BTSerial.begin(115200); 
  
     delay(1000);
  
