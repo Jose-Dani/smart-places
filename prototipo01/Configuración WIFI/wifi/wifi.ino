@@ -3,26 +3,25 @@
 const byte RxD = 10;
 const byte TxD = 11;
 const byte LEDPIN = 13; 
- 
+const int baudRate = 9600; 
 SoftwareSerial BTSerial(RxD, TxD);
  
 void setup() 
 {
     pinMode(LEDPIN, OUTPUT);
  
-    Serial.begin(115200);   
-    BTSerial.begin(115200); 
+    Serial.begin(baudRate);   
+        delay(1000);
+
+    BTSerial.begin(baudRate); 
  
     delay(1000);
  
     digitalWrite(LEDPIN, HIGH);  
- 
-    Serial.println(" ");
-    Serial.println("AT mode.");
-    Serial.println("Remember to to set Both NL & CR in the serial monitor.");
- 
-    Serial.print("BT STATE = ");
+     Serial.println("AT");
+
     BTSerial.println("AT+STATE" );
+    BTSerial.println("AT");
  
     Serial.println("Enter AT commands");
 }
@@ -32,6 +31,7 @@ void loop(){
      Serial.write(BTSerial.read());  
   } 
   if (Serial.available()){  
+    
      BTSerial.write(Serial.read()); 
   }
 }

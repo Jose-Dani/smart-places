@@ -8,7 +8,7 @@ const byte LEDPIN = 13;
  
 SoftwareSerial WSerial(RxD, TxD);
  
-String  dir = "192.168.1.101",
+String  dir = "192.168.1.102",
         port = "9000",
         protocol = "TCP",
         request = "/getStatus";
