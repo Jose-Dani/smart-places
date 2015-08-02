@@ -10,10 +10,15 @@ class ESP8266 {
 		ESP8266(int RX, int TX, int baudRate);
 		String sendData(String command, const int timeout);
 		String connect(String user, String pass);
-		String sendRequest(String dir, int port, String sendRequest, const int timeout);
-	private:
+		String sendRequest(String dir, int port, String sendRequest, const int timeout);		
+	    void init();	    
+
+	private:		
 		SoftwareSerial * wifi;
-	    void init();
+		int commonDelay;
+		int _baudRate;
+	    void printAvailable();
+	    String findResponse(String command, const int timeout);
 };
 
 #endif
