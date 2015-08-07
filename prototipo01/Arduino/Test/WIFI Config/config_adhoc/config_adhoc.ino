@@ -41,6 +41,7 @@ void SpSetup::init() {
   sendData("AT+CIFSR\r\n",1000,DEBUG); // get ip address
   sendData("AT+CIPMUX=1\r\n",1000,DEBUG); // configure for multiple connections
   sendData("AT+CIPSERVER=1,80\r\n",1000,DEBUG); // turn on server on port 80
+  sendData("AT+CIPSTO=10000\r\n",1000,DEBUG); // turn on server on port 80
 }
 
 void SpSetup::listen() {
