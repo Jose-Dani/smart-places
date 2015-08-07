@@ -2,7 +2,7 @@
 #define DEBUG true
 
 #define BAUDRATE 9600
-SoftwareSerial es8266(3, 2);
+SoftwareSerial esp8266(3, 2);
 
 // Libreria SpSetup
 //#include <Arduino.h>
@@ -37,15 +37,14 @@ void SpSetup::disableDebug() {
 }
 
 void SpSetup::init() {
-  sendData("AT+CWMODE=2\r\n",1000,DEBUG); // configure as access point
+  sendData("AT+CWMODE=3\r\n",1000,DEBUG); // configure as access point
   sendData("AT+CIFSR\r\n",1000,DEBUG); // get ip address
   sendData("AT+CIPMUX=1\r\n",1000,DEBUG); // configure for multiple connections
   sendData("AT+CIPSERVER=1,80\r\n",1000,DEBUG); // turn on server on port 80
 }
 
 void SpSetup::listen() {
-if(_serial->available()) {
-  Serial.write(_serial->read());
+  if(_serial->available()) {
     if(_serial->find("+IPD,"))
     {
      delay(1000);
@@ -102,11 +101,11 @@ String SpSetup::sendData(String command, const int timeout, boolean debug) {
 // Fin de libreria
 
 
-SpSetup spSetup = SpSetup(es8266);
+SpSetup spSetup = SpSetup(esp8266);
 
 void setup() {
     Serial.begin(BAUDRATE);   
-    es8266.begin(BAUDRATE);
+    esp8266.begin(BAUDRATE);
     
     spSetup.enableDebug();
     spSetup.init();
