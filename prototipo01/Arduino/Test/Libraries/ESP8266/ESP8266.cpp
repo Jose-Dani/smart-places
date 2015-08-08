@@ -4,9 +4,9 @@ ESP8266::ESP8266(int RX, int TX, int baudRate){
 	_baudRate = baudRate;
   Serial.println("init esp8266");
   wifi = new SoftwareSerial(RX, TX);
-  wifi->begin(57600);
+  wifi->begin(baudRate);
   delay(2000);
-  commonDelay = 50;
+  commonDelay = 100;
   
 // init();
 }
@@ -19,8 +19,8 @@ String ESP8266::sendData(String command, const int timeout){
   while( (time+timeout) > millis()) {
     while(wifi->available()) {
       char c = wifi->read();
-      response+=c;
-     // Serial.write(c);
+      response+=c;      
+      Serial.write(c);
     }  
   }
  // Serial.println(response);
@@ -44,13 +44,21 @@ String ESP8266::connect(String user, String pass){
 
 String ESP8266::sendRequest(String dir, int port, String sendRequest, const int timeout){
   int count = 0;
-  String cmd = "AT+CIPSTART=\"TCP\",\""+dir+"\", "+port+"\r\n"; 
+  String cmd = "AT+CIPSTART=\"TCP\",\""+dir+"\","+port+"\r\n"; 
   String response = "";
-  while(! (response.indexOf("CONNECT") > 0)){
-      response = sendData(cmd, commonDelay);
-  }
-  Serial.print("Connected to server at "); 
+  
 
+  while(! (response.indexOf("CONNECT") > 0) && count != 5){
+      response = sendData(cmd, commonDelay);
+      wifi->flush();
+      count++;
+  }
+  if(count == 5){
+    Serial.println("cannot connect");
+    return response;
+  }
+  Serial.print("Conn "); 
+  count = 0;
   response = "";
   cmd = "GET "+sendRequest+" HTTP/1.1\r\n";
   cmd += "Host:"+dir+"\r\n\r\n";
@@ -63,11 +71,10 @@ String ESP8266::sendRequest(String dir, int port, String sendRequest, const int 
       count++;
 
   }
- // Serial.println("length sended : "+response);
   response = findResponse(cmd+"\r\n", timeout);
- // Serial.println("request sended : "+response);
 
   sendData("AT+CIPCLOSE", commonDelay);
+  wifi->flush();
   return response;
 }
 
@@ -81,7 +88,7 @@ String ESP8266::findResponse(String command, const int timeout){
       while(wifi->available()) {
         char c = wifi->read();
         response+=c;
-        // Serial.write(c);
+         Serial.write(c);
       }  
     }    
   }
